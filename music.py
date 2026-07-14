@@ -1,4 +1,4 @@
-import streamlit as st
+successfully downloaded text file (SHA: f12df0fbc35e4fe7be538e529555f6f31ba9cf8d)import streamlit as st
 import requests
 
 # ==========================================
@@ -275,19 +275,21 @@ if st.session_state.item_list:
     for idx, item in enumerate(st.session_state.item_list):
         with cols[idx % 2]:
             artist_info = f"by {item['artist']}" if item.get('artist') else ""
+            col_item, col_del = st.columns([5, 1])
             
-            st.markdown(f"""
-            <div style='background-color: #2b4c7e; padding: 12px; border-radius: 2px; color: #ffffff; font-size: 13px; position: relative; margin-right: 8px;'>
-                <span onclick="document.getElementById('del_btn_{item['id']}').click()" style='position: absolute; top: 3px; right: 5px; cursor: pointer; color: #ffffff; font-size: 18px; font-weight: bold; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;'>×</span>
-                <div style='font-weight: bold; color: #ffffff;'>[♪] {item['name']}</div>
-                <div style='color: #dfe5ed; font-size: 11px; margin-top: 4px;'>{artist_info}</div>
-                <div style='color: #b8c5d6; font-size: 10px; margin-top: 3px;'>{item['mode']}</div>
-            </div>
-            """, unsafe_allow_html=True)
+            with col_item:
+                st.markdown(f"""
+                <div style='background-color: #2b4c7e; padding: 12px; border-radius: 2px; color: #ffffff; font-size: 13px; margin-right: 8px;'>
+                    <div style='font-weight: bold; color: #ffffff;'>[♪] {item['name']}</div>
+                    <div style='color: #dfe5ed; font-size: 11px; margin-top: 4px;'>{artist_info}</div>
+                    <div style='color: #b8c5d6; font-size: 10px; margin-top: 3px;'>{item['mode']}</div>
+                </div>
+                """, unsafe_allow_html=True)
             
-            if st.button("", key=f"del_btn_{item['id']}", use_container_width=False):
-                st.session_state.item_list.remove(item)
-                st.rerun()
+            with col_del:
+                if st.button("✕", key=f"del_btn_{item['id']}", use_container_width=True, help="Remove"):
+                    st.session_state.item_list.remove(item)
+                    st.rerun()
     
     # 초기화 버튼
     if st.button("[↻] RESET ALL", use_container_width=False):
